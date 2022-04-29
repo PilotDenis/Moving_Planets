@@ -37,7 +37,7 @@ public class MyActionListener implements ActionListener {
                 // Определение режима - только файл
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-                int result = fileChooser.showOpenDialog(btnPanel);
+                int result = fileChooser.showOpenDialog(btnFileFilter);
 
                 //-- Если файл выбран, то считываем начальные параметры планет из файла и отрисовываем начальную конфигурацию планет на экране
                 if (result == JFileChooser.APPROVE_OPTION) {

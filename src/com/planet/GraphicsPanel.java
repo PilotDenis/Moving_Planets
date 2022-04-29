@@ -9,12 +9,9 @@ import static com.planet.Main.*;
 public class GraphicsPanel extends JPanel {
     private static boolean first = true;
     public GraphicsPanel() {
-
-//        setOpaque(false);
         setBackground(Color.BLACK);
         setLayout(null);
         setBounds(0,btnPanel.getHeight(), frame.getWidth(), frame.getHeight());
-
 
 //--    Создаем и запускаем поток
         Thread MyThread = new Thread(new Runner());
@@ -28,7 +25,7 @@ public class GraphicsPanel extends JPanel {
 //--    Вызов метода super.paintComponent(g) перерисовывает окно и траектории планет стираются
         if(notrace) {
             super.paintComponent(g);
-
+//--    Устанавливаем фоновое изображение графической панели
             if(backgroundImage != null) {
                 g2.drawImage(backgroundImage, 0, 0, null);
             }

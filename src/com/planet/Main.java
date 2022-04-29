@@ -3,7 +3,6 @@ package com.planet;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -15,7 +14,8 @@ import java.util.Scanner;
 import static java.lang.Math.abs;
 
 public class Main {
-    public static JFrame frame, frame_;
+    private static final int MAXQTY = 10; //-- Константа, определяющая максимальное количество планет
+    public static JFrame frame;
     public static GraphicsPanel panel;
     public static String cfgFileName = "Planet_settings.txt";
     public static JPanel btnPanel;
@@ -28,11 +28,12 @@ public class Main {
     public static JCheckBox cbTrace;
     public static boolean notrace = false;
     public static Image backgroundImage;
-    public static ImageIcon icon;
-    public static JLabel contentPane;
-    public static BackgroundPanel b_panel;
+//    public static ImageIcon icon;
+//    public static JLabel contentPane;
+//    public static BackgroundPanel b_panel;
+
     public static int num_of_planets = 0;
-    static Planet[] P = new Planet[10];
+    static Planet[] P = new Planet[MAXQTY];
 
     private static final float dT = 1f;
     private static final float G = 0.001f;
@@ -42,13 +43,13 @@ public class Main {
     public static boolean started = false;
     public static int delay = 10;
 
-    private static float[][] F = new float[10][10]; // Матрица сил притяжения от i-й планеты до j-й
-    private static float[][] Fx = new float[10][10]; // Матрица сил притяжения от i-й планеты до j-й по горизонтали
-    private static float[][] Fy = new float[10][10]; // Матрица сил притяжения от i-й планеты до j-й по вертикали
-    private static float[][] R = new float[10][10]; // Матрица расстояний от i-й планеты до j-й
+    private static float[][] F = new float[MAXQTY][MAXQTY]; // Матрица сил притяжения от i-й планеты до j-й
+    private static float[][] Fx = new float[MAXQTY][MAXQTY]; // Матрица сил притяжения от i-й планеты до j-й по горизонтали
+    private static float[][] Fy = new float[MAXQTY][MAXQTY]; // Матрица сил притяжения от i-й планеты до j-й по вертикали
+    private static float[][] R = new float[MAXQTY][MAXQTY]; // Матрица расстояний от i-й планеты до j-й
 
-    private static int[][] dir_x = new int[10][10]; // Матрица направлений силы притяжения от i-й планеты до j-й по горизонтали
-    private static int[][] dir_y = new int[10][10]; // Матрица направлений силы притяжения от i-й планеты до j-й по вертикали
+    private static int[][] dir_x = new int[MAXQTY][MAXQTY]; // Матрица направлений силы притяжения от i-й планеты до j-й по горизонтали
+    private static int[][] dir_y = new int[MAXQTY][MAXQTY]; // Матрица направлений силы притяжения от i-й планеты до j-й по вертикали
 
     private static float dx, dy;
 
@@ -73,12 +74,12 @@ public class Main {
         notrace = s.equalsIgnoreCase("notrace");
 
         try {
+//--        Загружаем файл для отображения фоновой картинки
             File bkgr_f = new File("res/Space_background.jpg");
             backgroundImage = ImageIO.read(bkgr_f);
-            icon = new ImageIcon("res/Space_background.jpg");
-//--        Создаем вспомогательную графическую панель для отображения фоновой картинки
-            b_panel = new BackgroundPanel(backgroundImage);
-
+//            icon = new ImageIcon("res/Space_background.jpg");
+            //--        Создаем вспомогательную графическую панель для отображения фоновой картинки
+//            b_panel = new BackgroundPanel(backgroundImage);
         }
         catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "File not found: Space_background.jpg");
@@ -87,7 +88,6 @@ public class Main {
             JOptionPane.showMessageDialog(null, "Cannot read file: Space_background.jpg");
             e.printStackTrace();
         }
-
 
 //--    Создаем графическое окно
         frame = new JFrame();
@@ -99,27 +99,11 @@ public class Main {
         frame.setExtendedState(frame.MAXIMIZED_BOTH);
         frame.setBackground(Color.RED); // -- Для отладки
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame_ = new JFrame();
-        frame_.setTitle("Graphic panel");
-        frame_.setLocationRelativeTo(null);
-        frame_.setLocation(50, 50);
-        frame_.setLayout(null);
-        frame_.setSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 600, Toolkit.getDefaultToolkit().getScreenSize().height - 500));
-//        frame.setExtendedState(frame.MAXIMIZED_BOTH);
-        frame_.setBackground(Color.RED); // -- Для отладки
-        frame_.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-//        contentPane = new JLabel();
-//        contentPane.setIcon(icon);
-//        frame.setContentPane(contentPane);
         frame.setVisible(true);
-
 
         btnPanel = new JPanel();
         btnPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        btnPanel.setBounds(0,0, 650, 36);
+        btnPanel.setBounds(0,0, Toolkit.getDefaultToolkit().getScreenSize().width, 36);
         ActionListener al = new MyActionListener();
 
 //--    Создаем кнопку выбора файла конфигурации в панели кнопок
@@ -175,18 +159,8 @@ public class Main {
         panel = new GraphicsPanel();
         frame.add(panel);
 
-
-        if(b_panel != null) {
-            b_panel.setBounds(0,36, frame.getWidth(), frame.getHeight());
-            frame.add(b_panel);
-        }
-
-
         frame.setVisible(true);
-//        frame_.setAlwaysOnTop(true);
-//        frame_.setVisible(true);
         readSettingsFile(cfgFileName);
-
     }
 
     public static void readSettingsFile(String fname) throws FileNotFoundException {
