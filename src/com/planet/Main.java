@@ -73,9 +73,9 @@ public class Main {
         notrace = s.equalsIgnoreCase("notrace");
 
         try {
-            File bkgr_f = new File("Space_background.jpg");
+            File bkgr_f = new File("res/Space_background.jpg");
             backgroundImage = ImageIO.read(bkgr_f);
-            icon = new ImageIcon("Space_background.jpg");
+            icon = new ImageIcon("res/Space_background.jpg");
 //--        Создаем вспомогательную графическую панель для отображения фоновой картинки
             b_panel = new BackgroundPanel(backgroundImage);
 
