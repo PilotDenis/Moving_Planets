@@ -21,14 +21,11 @@ public class GraphicsPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        super.paintComponent(g);
 
-//--    Вызов метода super.paintComponent(g) перерисовывает окно и траектории планет стираются
-        if(notrace) {
-            super.paintComponent(g);
-//--    Устанавливаем фоновое изображение графической панели
-            if(backgroundImage != null) {
-                g2.drawImage(backgroundImage, 0, 0, null);
-            }
+//--    Выводим фоновое изображение графической панели
+        if(backgroundImage != null) {
+            g2.drawImage(backgroundImage, 0, 0, null);
         }
 
 //--    Отрисовываем планеты
@@ -37,11 +34,11 @@ public class GraphicsPanel extends JPanel {
             g2.setColor(P[i].getColor());
             g2.fill(P[i]);
             g2.draw(P[i]);
+            g2.draw(P[i].tail);
         }
 
 //--    Актуализируем счетчик времени
         tLabel.setText("T = " + String.valueOf(Math.round(t / 63.9055f)));
-
     }
 
     class Runner implements Runnable {

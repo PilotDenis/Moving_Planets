@@ -1,8 +1,9 @@
 package com.planet;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.*;
+import java.sql.Array;
+import java.util.ArrayList;
 
 public class Planet extends Ellipse2D {
     public float x; //-- Координата для расчета
@@ -20,6 +21,8 @@ public class Planet extends Ellipse2D {
     public boolean alive = true;
     public double r;
     private Color color;
+
+    protected Path2D.Double tail;
 
     public Planet(float x0, float y0, float v0x, float v0y, float _m, double r, Color color, int planet_id) {
         id = planet_id;
@@ -40,15 +43,15 @@ public class Planet extends Ellipse2D {
 
         this.r = r;
         this.color = color;
+
+//--    Инициализируем траекторию (хвост) планеты
+        tail = new Path2D.Double();
+        tail.moveTo(x, y);
     }
 
     public void destroyPlanet() {
         m = 0;
         r = 0;
-//        vx = 0;
-//        vy = 0;
-//        ax = 0;
-//        ay = 0;
         alive = false;
     }
 
@@ -60,6 +63,9 @@ public class Planet extends Ellipse2D {
 //--    Координаты для отображения окружности - это левый верхний угол квадрата, описывающего окружность, а не ее центр
         xDraw = x - (float) r;
         yDraw = y - (float) r;
+
+//--    Записываем новые координаты точки траектории планеты        
+        tail.lineTo(x, y);
     }
 
     public Color getColor() {
@@ -83,7 +89,6 @@ public class Planet extends Ellipse2D {
         xDraw = x - (float) r;
         yDraw = y - (float) r;
     }
-
 
     @Override
     public double getX() {
@@ -112,8 +117,8 @@ public class Planet extends Ellipse2D {
 
     @Override
     public void setFrame(double x, double y, double r, double h) {
-        xDraw = (float) x;
-        yDraw = (float) y;
+        this.xDraw = (float) x;
+        this.yDraw = (float) y;
         this.r = r;
     }
 
@@ -121,4 +126,5 @@ public class Planet extends Ellipse2D {
     public Rectangle2D getBounds2D() {
         return null;
     }
+
 }
