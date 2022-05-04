@@ -1,5 +1,6 @@
 package com.planet;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.sql.Array;
@@ -24,8 +25,26 @@ public class Planet extends Ellipse2D {
 
     protected Path2D.Double tail;
 
-    public Planet(float x0, float y0, float v0x, float v0y, float _m, double r, Color color, int planet_id) {
-        id = planet_id;
+    public Planet(String cfgFileLine, int planetID) {
+        float x0, y0, v0x, v0y, m;
+        double r;
+        int cr, cg, cb;
+        Color col;
+
+        String[] words = cfgFileLine.split(";");
+
+        x0 = java.lang.Float.parseFloat(words[0].trim());
+        y0 = java.lang.Float.parseFloat(words[1].trim());
+        v0x = java.lang.Float.parseFloat(words[2].trim());
+        v0y = java.lang.Float.parseFloat(words[3].trim());
+        m = java.lang.Float.parseFloat(words[4].trim());
+        r = java.lang.Double.parseDouble(words[5].trim());
+        cr = Integer.parseInt(words[6].trim());
+        cg = Integer.parseInt(words[7].trim());
+        cb = Integer.parseInt(words[8].trim());
+        col = new Color(cr, cg, cb);
+
+        id = planetID;
 //--    Координаты для отображения окружности - это левый верхний угол квадрата, описывающего окружность, а не ее центр
         xDraw = x0 - (float) r;
         yDraw = y0 - (float) r;
@@ -36,13 +55,13 @@ public class Planet extends Ellipse2D {
 
         vx = v0x;
         vy = v0y;
-        m = _m;
+        this.m = m;
 
         ax = 0;
         ay = 0;
 
         this.r = r;
-        this.color = color;
+        this.color = col;
 
 //--    Инициализируем траекторию (хвост) планеты
         tail = new Path2D.Double();

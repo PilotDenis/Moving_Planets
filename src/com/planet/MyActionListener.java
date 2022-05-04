@@ -43,7 +43,7 @@ public class MyActionListener implements ActionListener {
                 if (result == JFileChooser.APPROVE_OPTION) {
                     try {
                         cfgFileName = String.valueOf(fileChooser.getSelectedFile());
-                        Main.readSettingsFile(cfgFileName);
+                        Model.readSettingsFile(cfgFileName);
                         btnStart.requestFocus();
                         frame.repaint();
                     } catch (FileNotFoundException ex) {
@@ -55,7 +55,7 @@ public class MyActionListener implements ActionListener {
             case "RESTART":
                 //-- Заново считываем начальные параметры планет из файла и отрисовываем начальную конфигурацию планет на экране
                 try {
-                    Main.readSettingsFile(cfgFileName);
+                    Model.readSettingsFile(cfgFileName);
                     btnStart.requestFocus();
                     frame.repaint();
                 } catch (FileNotFoundException ex) {
