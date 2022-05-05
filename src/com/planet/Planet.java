@@ -23,7 +23,12 @@ public class Planet extends Ellipse2D {
     public double r;
     private Color color;
 
-    protected Path2D.Double tail;
+    public volatile Path2D.Float tail;
+
+//-- Флаги drawingTail и movingTail нужны для организации последовательного процесса перемещения планеты и отрисовки
+//   Иначе возникает ошибка IndexOutOfBound в классе Path2D
+    public volatile boolean drawingTail = false;
+    public volatile boolean movingTail = false;
 
     public Planet(String cfgFileLine, int planetID) {
         float x0, y0, v0x, v0y, m;
@@ -64,7 +69,7 @@ public class Planet extends Ellipse2D {
         this.color = col;
 
 //--    Инициализируем траекторию (хвост) планеты
-        tail = new Path2D.Double();
+        tail = new Path2D.Float();
         tail.moveTo(x, y);
     }
 
@@ -83,8 +88,12 @@ public class Planet extends Ellipse2D {
         xDraw = x - (float) r;
         yDraw = y - (float) r;
 
-//--    Записываем новые координаты точки траектории планеты        
-        tail.lineTo(x, y);
+//--    Записываем новые координаты точки траектории планеты
+
+        movingTail = true;
+//--    Добавляем новый кусочек траектории только в том случае, если в настоящий момент не происходит рисования этой самой траектории в другом потоке
+        if(!drawingTail) tail.lineTo(x, y);
+        movingTail = false;
     }
 
     public Color getColor() {
